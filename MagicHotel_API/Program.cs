@@ -1,8 +1,19 @@
+using MagicHotel_API.Datos;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+// AGREGAR: .AddNewtonsoftJson(); para usar el PATCH
+builder.Services.AddControllers().AddNewtonsoftJson();
+
+// Conectar la cadena de conexion con DbContext
+builder.Services.AddDbContext<ApplicationDbContext>(option =>
+{
+    option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
