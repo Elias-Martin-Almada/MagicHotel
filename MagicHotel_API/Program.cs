@@ -1,3 +1,4 @@
+using MagicHotel_API;
 using MagicHotel_API.Datos;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,6 +14,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(option =>
 {
     option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
+// Agrego el servicio de AutoMapper para usarlo
+builder.Services.AddAutoMapper(typeof(MappingConfig));
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
