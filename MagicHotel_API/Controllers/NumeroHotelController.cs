@@ -14,17 +14,20 @@ namespace MagicHotel_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class HotelController : ControllerBase
+    public class NumeroHotelController : ControllerBase
     {
-        private readonly ILogger<HotelController> _logger; // Registra info sobre el comportamiento de la API
+        private readonly ILogger<NumeroHotelController> _logger; // Registra info sobre el comportamiento de la API
         private readonly IHotelRepositorio _hotelRepo;         // DbContext para usar datos de la DB
+        private readonly INumeroHotelRepositorio _numeroRepo;
         private readonly IMapper _mapper;
         protected APIResponse _response;
 
-        public HotelController(ILogger<HotelController> logger, IHotelRepositorio hotelRepositorio, IMapper mapper)
+        public NumeroHotelController(ILogger<NumeroHotelController> logger, IHotelRepositorio hotelRepo, 
+                                                                            INumeroHotelRepositorio numeroRepo, IMapper mapper)
         {
             _logger = logger;
-            _hotelRepo = hotelRepositorio;
+            _hotelRepo = hotelRepo;
+            _numeroRepo = numeroRepo;
             _mapper = mapper;
             _response = new();
         }
@@ -32,15 +35,15 @@ namespace MagicHotel_API.Controllers
         // Obtener Lista.
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<APIResponse>> GetHoteles()
+        public async Task<ActionResult<APIResponse>> GetNumeroHoteles()
         {
             try
             {
-                _logger.LogInformation("Obtener los Hoteles");
+                _logger.LogInformation("Obtener Numeros de Hoteles");
 
-                IEnumerable<Hotel> hotelList = await _hotelRepo.ObtenerTodos();
+                IEnumerable<NumeroHotel> NumeroHotelList = await _numeroRepo.ObtenerTodos();
 
-                _response.Resultado = _mapper.Map<IEnumerable<HotelDto>>(hotelList);
+                _response.Resultado = _mapper.Map<IEnumerable<NumeroHotelDto>>(NumeroHotelList);
                 _response.statusCode = HttpStatusCode.OK;
 
                 return Ok(_response); // Cod de estado 200.
@@ -54,34 +57,34 @@ namespace MagicHotel_API.Controllers
         }
 
         // Obtener solo un Hotel.
-        [HttpGet("id:int", Name = "GetHotel")]
+        [HttpGet("id:int", Name = "GetNumeroHotel")]
         // Documentar codigos de Estados:
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<APIResponse>> GetHotel(int id)
+        public async Task<ActionResult<APIResponse>> GetNumeroHotel(int id)
         {
             try
             {
                 if (id == 0)
                 {
-                    _logger.LogError("Error al traer el Hotel con Id " + id);
+                    _logger.LogError("Error al traer Numero de Hotel con Id " + id);
                     _response.statusCode = HttpStatusCode.BadRequest;
                     _response.IsExitoso = false;
                     return BadRequest(_response); // Cod de estado 400 Solucitud Incorrecta.
                 }
                 // Busca el Id que que coincida con el (id) que llega.
                 //var hotel = HotelStore.hotelList.FirstOrDefault(h => h.Id == id);   Lista de HotelStore
-                var hotel = await _hotelRepo.Obtener(h => h.Id == id);            //Lista de DB
+                var numeroHotel = await _numeroRepo.Obtener(h => h.HotelNo == id);            //Lista de DB
 
-                if (hotel == null)
+                if (numeroHotel == null)
                 {
                     _response.statusCode = HttpStatusCode.NotFound;
                     _response.IsExitoso = false;
                     return NotFound(_response); // Cod de estado 404 No encontrado.
                 }
 
-                _response.Resultado = _mapper.Map<HotelDto>(hotel);
+                _response.Resultado = _mapper.Map<NumeroHotelDto>(numeroHotel);
                 _response.statusCode = HttpStatusCode.OK;
 
                 return Ok(_response);
@@ -99,7 +102,7 @@ namespace MagicHotel_API.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<APIResponse>> CrearHotel([FromBody] HotelCreateDto createDto)
+        public async Task<ActionResult<APIResponse>> CrearNumeroHotel([FromBody] NumeroHotelCreateDto createDto)
         {
             try
             {
@@ -109,11 +112,18 @@ namespace MagicHotel_API.Controllers
                     return BadRequest();
                 }
                 // Validar Nombres repetidos
-                if (await _hotelRepo.Obtener(h => h.Nombre.ToLower() == createDto.Nombre.ToLower()) != null)
+                if (await _numeroRepo.Obtener(h => h.HotelNo == createDto.HotelNo) != null)
                 {
-                    ModelState.AddModelError("NombreExiste", "El Hotel con ese Nombre ya existe!");
+                    ModelState.AddModelError("NombreExiste", "El numero de Hotel ya existe!");
                     return BadRequest(ModelState);
                 }
+
+                if (await _hotelRepo.Obtener(h=>h.Id == createDto.HotelId) == null)
+                {
+                    ModelState.AddModelError("ClaveForanea", "El Id del Hotel no existe!");
+                    return BadRequest(ModelState);
+                }
+
                 // Validar null
                 if (createDto == null)
                 {
@@ -126,16 +136,16 @@ namespace MagicHotel_API.Controllers
                 //HotelStore.hotelList.Add(hotelDto);
 
                 // Agrego los datos al Modelo y mando a DB:
-                Hotel modelo = _mapper.Map<Hotel>(createDto);
+                NumeroHotel modelo = _mapper.Map<NumeroHotel>(createDto);
 
                 modelo.FechaCreacion = DateTime.Now;
                 modelo.FechaActualizacion = DateTime.Now;
-                await _hotelRepo.Crear(modelo);
+                await _numeroRepo.Crear(modelo);
                 _response.Resultado = modelo;
                 _response.statusCode = HttpStatusCode.Created;
 
                 // Retorno la ruta del nuevo registro
-                return CreatedAtRoute("GetHotel", new { id = modelo.Id }, _response);
+                return CreatedAtRoute("GetNumeroHotel", new { id = modelo.HotelNo }, _response);
             }
             catch (Exception ex)
             {
@@ -150,7 +160,7 @@ namespace MagicHotel_API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> DeleteHotel(int id)
+        public async Task<IActionResult> DeleteNumeroHotel(int id)
         {
             try
             {
@@ -161,8 +171,8 @@ namespace MagicHotel_API.Controllers
                     return BadRequest(_response);
                 }
                 // Busco el hotel por su Id
-                var hotel = await _hotelRepo.Obtener(h => h.Id == id);
-                if (hotel == null)
+                var numeroHotel = await _numeroRepo.Obtener(h => h.HotelNo == id);
+                if (numeroHotel == null)
                 {
                     _response.IsExitoso = false;
                     _response.statusCode = HttpStatusCode.NoContent;
@@ -170,7 +180,7 @@ namespace MagicHotel_API.Controllers
                 }
                 // Si pasa las validaciones anteriores es porque encontro un Id, entonces elimina
                 //HotelStore.hotelList.Remove(hotel);
-                await _hotelRepo.Remover(hotel);
+                await _numeroRepo.Remover(numeroHotel);
 
                 _response.statusCode = HttpStatusCode.NoContent;
                 return Ok(_response);
@@ -187,62 +197,32 @@ namespace MagicHotel_API.Controllers
         [HttpPut("{id:int}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> UpdateHotel(int id, [FromBody] HotelUpdateDto updateDto)
+        public async Task<IActionResult> UpdateNumeroHotel(int id, [FromBody] NumeroHoteUpdatelDto updateDto)
         {
-            if (updateDto == null || id != updateDto.Id)
+            if (updateDto == null || id != updateDto.HotelNo)
             {
                 _response.IsExitoso = false;
                 _response.statusCode = HttpStatusCode.BadRequest;
                 return BadRequest(_response);
             }
 
-            // Actualizo el Modelo
-            Hotel modelo = _mapper.Map<Hotel>(updateDto);
+            if (await _hotelRepo.Obtener(h=>h.Id == updateDto.HotelId) == null)
+            {
+                ModelState.AddModelError("ClaveForanea", "El Id del Hotel No existe!");
+                return BadRequest(ModelState);
+            }
 
-            await _hotelRepo.Actualizar(modelo); // Update no es un metodo Async
+            // Actualizo el Modelo
+            NumeroHotel modelo = _mapper.Map<NumeroHotel>(updateDto);
+
+            await _numeroRepo.Actualizar(modelo); // Update no es un metodo Async
             _response.statusCode = HttpStatusCode.NoContent;
 
             return Ok(_response); 
         }
 
         // Actualizar solo UNA Propiedad del Registro
-        [HttpPatch("{id:int}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> UpdatePartialHotel(int id, JsonPatchDocument<HotelUpdateDto> patchDto)
-        {
-            if (patchDto == null || id == 0)
-            {
-                return BadRequest();
-            }
-            //var hotel = HotelStore.hotelList.FirstOrDefault(h => h.Id == id);
-            var hotel = await _hotelRepo.Obtener(h => h.Id == id, tracked : false);
-
-            HotelUpdateDto hotelDto = _mapper.Map<HotelUpdateDto>(hotel);
-
-            if (hotel == null) return BadRequest();
-
-            patchDto.ApplyTo(hotelDto, ModelState);
-
-            if(!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            Hotel modelo = _mapper.Map<Hotel>(hotelDto);
-
-            await _hotelRepo.Actualizar(modelo);
-            _response.statusCode = HttpStatusCode.NoContent;
-            
-            return Ok(_response);
-        } 
-        // Para usar el PATCH:
-        //  "operationType": 0,
-        //  "path": "/metroscuadrados", <=Nombre de Propiedad
-        //  "op": "replace",            <=Operacion
-        //  "from": "string",
-        //  "value": "35"               <=Dato Nuevo
-
+        
     }
 
 }

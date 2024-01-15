@@ -11,6 +11,7 @@ namespace MagicHotel_API.Datos
             
         }
         public DbSet<Hotel> Hoteles { get; set; }
+        public DbSet<NumeroHotel> NumeroHoteles { get; set; }
         // Metodo para crear registros en la tabla Hoteles en DB
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

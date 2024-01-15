@@ -13,6 +13,10 @@ namespace MagicHotel_API
 
             CreateMap<Hotel, HotelCreateDto>().ReverseMap();
             CreateMap<Hotel, HotelUpdateDto>().ReverseMap();
+
+            CreateMap<NumeroHotel, NumeroHotelDto>().ReverseMap();
+            CreateMap<NumeroHotel, NumeroHotelCreateDto>().ReverseMap();
+            CreateMap<NumeroHotel, NumeroHoteUpdatelDto>().ReverseMap();
         }
     }
 }
