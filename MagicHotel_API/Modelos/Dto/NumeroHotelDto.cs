@@ -11,5 +11,7 @@ namespace MagicHotel_API.Modelos.Dto
         public int HotelId { get; set; }
 
         public string DetalleEspecial { get; set; }
+
+        public HotelDto Hotel { get; set; }
     }
 }

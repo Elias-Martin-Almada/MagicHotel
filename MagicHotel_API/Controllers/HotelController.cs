@@ -54,7 +54,7 @@ namespace MagicHotel_API.Controllers
         }
 
         // Obtener solo un Hotel.
-        [HttpGet("id:int", Name = "GetHotel")]
+        [HttpGet("{id:int}", Name = "GetHotel")]
         // Documentar codigos de Estados:
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -111,7 +111,7 @@ namespace MagicHotel_API.Controllers
                 // Validar Nombres repetidos
                 if (await _hotelRepo.Obtener(h => h.Nombre.ToLower() == createDto.Nombre.ToLower()) != null)
                 {
-                    ModelState.AddModelError("NombreExiste", "El Hotel con ese Nombre ya existe!");
+                    ModelState.AddModelError("ErrorMessages", "El Hotel con ese Nombre ya existe!");
                     return BadRequest(ModelState);
                 }
                 // Validar null

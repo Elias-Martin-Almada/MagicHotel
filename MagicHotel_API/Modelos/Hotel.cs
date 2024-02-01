@@ -8,6 +8,7 @@ namespace MagicHotel_API.Modelos
         [Key] // Le digo a Entity que Id es clave primaria
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)] // El id se asigna solo.
         public int Id { get; set; }
+        [Required]
         public string Nombre { get; set; }
         public string Detalle { get; set; }
         [Required]

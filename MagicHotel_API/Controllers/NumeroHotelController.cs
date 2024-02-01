@@ -41,7 +41,7 @@ namespace MagicHotel_API.Controllers
             {
                 _logger.LogInformation("Obtener Numeros de Hoteles");
 
-                IEnumerable<NumeroHotel> NumeroHotelList = await _numeroRepo.ObtenerTodos();
+                IEnumerable<NumeroHotel> NumeroHotelList = await _numeroRepo.ObtenerTodos(incluirPropiedades:"Hotel");
 
                 _response.Resultado = _mapper.Map<IEnumerable<NumeroHotelDto>>(NumeroHotelList);
                 _response.statusCode = HttpStatusCode.OK;
@@ -57,7 +57,7 @@ namespace MagicHotel_API.Controllers
         }
 
         // Obtener solo un Hotel.
-        [HttpGet("id:int", Name = "GetNumeroHotel")]
+        [HttpGet("{id:int}", Name = "GetNumeroHotel")]
         // Documentar codigos de Estados:
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -75,7 +75,7 @@ namespace MagicHotel_API.Controllers
                 }
                 // Busca el Id que que coincida con el (id) que llega.
                 //var hotel = HotelStore.hotelList.FirstOrDefault(h => h.Id == id);   Lista de HotelStore
-                var numeroHotel = await _numeroRepo.Obtener(h => h.HotelNo == id);            //Lista de DB
+                var numeroHotel = await _numeroRepo.Obtener(h => h.HotelNo == id, incluirPropiedades:"Hotel");            //Lista de DB
 
                 if (numeroHotel == null)
                 {
@@ -114,13 +114,13 @@ namespace MagicHotel_API.Controllers
                 // Validar Nombres repetidos
                 if (await _numeroRepo.Obtener(h => h.HotelNo == createDto.HotelNo) != null)
                 {
-                    ModelState.AddModelError("NombreExiste", "El numero de Hotel ya existe!");
+                    ModelState.AddModelError("ErrorMessages", "El numero de Hotel ya existe!");
                     return BadRequest(ModelState);
                 }
 
                 if (await _hotelRepo.Obtener(h=>h.Id == createDto.HotelId) == null)
                 {
-                    ModelState.AddModelError("ClaveForanea", "El Id del Hotel no existe!");
+                    ModelState.AddModelError("ErrorMessages", "El Id del Hotel no existe!");
                     return BadRequest(ModelState);
                 }
 
@@ -208,7 +208,7 @@ namespace MagicHotel_API.Controllers
 
             if (await _hotelRepo.Obtener(h=>h.Id == updateDto.HotelId) == null)
             {
-                ModelState.AddModelError("ClaveForanea", "El Id del Hotel No existe!");
+                ModelState.AddModelError("ErrorMessages", "El Id del Hotel No existe!");
                 return BadRequest(ModelState);
             }
 

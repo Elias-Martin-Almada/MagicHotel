@@ -31,11 +31,9 @@ namespace MagicHotelAPI.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Amenidad")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Detalle")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("FechaActualizacion")
@@ -45,7 +43,6 @@ namespace MagicHotelAPI.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ImagenUrl")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("MetrosCuadrados")
@@ -71,8 +68,8 @@ namespace MagicHotelAPI.Migrations
                             Id = 1,
                             Amenidad = "",
                             Detalle = "Detalle de Hotel",
-                            FechaActualizacion = new DateTime(2024, 1, 12, 20, 54, 6, 892, DateTimeKind.Local).AddTicks(3787),
-                            FechaCreacion = new DateTime(2024, 1, 12, 20, 54, 6, 892, DateTimeKind.Local).AddTicks(3777),
+                            FechaActualizacion = new DateTime(2024, 1, 21, 11, 44, 21, 119, DateTimeKind.Local).AddTicks(7846),
+                            FechaCreacion = new DateTime(2024, 1, 21, 11, 44, 21, 119, DateTimeKind.Local).AddTicks(7836),
                             ImagenUrl = "",
                             MetrosCuadrados = 50,
                             Nombre = "Hotel Real",
@@ -84,8 +81,8 @@ namespace MagicHotelAPI.Migrations
                             Id = 2,
                             Amenidad = "",
                             Detalle = "Detalle de Hotel",
-                            FechaActualizacion = new DateTime(2024, 1, 12, 20, 54, 6, 892, DateTimeKind.Local).AddTicks(3789),
-                            FechaCreacion = new DateTime(2024, 1, 12, 20, 54, 6, 892, DateTimeKind.Local).AddTicks(3789),
+                            FechaActualizacion = new DateTime(2024, 1, 21, 11, 44, 21, 119, DateTimeKind.Local).AddTicks(7850),
+                            FechaCreacion = new DateTime(2024, 1, 21, 11, 44, 21, 119, DateTimeKind.Local).AddTicks(7849),
                             ImagenUrl = "",
                             MetrosCuadrados = 40,
                             Nombre = "Premium Vista a la Piscina",
@@ -100,7 +97,6 @@ namespace MagicHotelAPI.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("DetalleEspecial")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("FechaActualizacion")
