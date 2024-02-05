@@ -3,6 +3,7 @@ using MagicHotel_API.Datos;
 using MagicHotel_API.Modelos;
 using MagicHotel_API.Modelos.Dto;
 using MagicHotel_API.Repositorio.IRepositorio;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -31,6 +32,7 @@ namespace MagicHotel_API.Controllers
 
         // Obtener Lista.
         [HttpGet]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<APIResponse>> GetHoteles()
         {
@@ -55,6 +57,7 @@ namespace MagicHotel_API.Controllers
 
         // Obtener solo un Hotel.
         [HttpGet("{id:int}", Name = "GetHotel")]
+        [Authorize]
         // Documentar codigos de Estados:
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -96,6 +99,7 @@ namespace MagicHotel_API.Controllers
 
         // Agregar un Hotel
         [HttpPost]
+        [Authorize(Roles ="admin")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -150,6 +154,7 @@ namespace MagicHotel_API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize(Roles ="admin")]
         public async Task<IActionResult> DeleteHotel(int id)
         {
             try
@@ -185,7 +190,8 @@ namespace MagicHotel_API.Controllers
 
         // Actualizar Registro Completo
         [HttpPut("{id:int}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+		[Authorize(Roles = "admin")]
+		[ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> UpdateHotel(int id, [FromBody] HotelUpdateDto updateDto)
         {
@@ -207,7 +213,8 @@ namespace MagicHotel_API.Controllers
 
         // Actualizar solo UNA Propiedad del Registro
         [HttpPatch("{id:int}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+		[Authorize(Roles = "admin")]
+		[ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> UpdatePartialHotel(int id, JsonPatchDocument<HotelUpdateDto> patchDto)
         {

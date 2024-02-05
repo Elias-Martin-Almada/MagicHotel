@@ -3,6 +3,7 @@ using MagicHotel_API.Datos;
 using MagicHotel_API.Modelos;
 using MagicHotel_API.Modelos.Dto;
 using MagicHotel_API.Repositorio.IRepositorio;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -34,6 +35,7 @@ namespace MagicHotel_API.Controllers
 
         // Obtener Lista.
         [HttpGet]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<APIResponse>> GetNumeroHoteles()
         {
@@ -58,8 +60,9 @@ namespace MagicHotel_API.Controllers
 
         // Obtener solo un Hotel.
         [HttpGet("{id:int}", Name = "GetNumeroHotel")]
-        // Documentar codigos de Estados:
-        [ProducesResponseType(StatusCodes.Status200OK)]
+		[Authorize]
+		// Documentar codigos de Estados:
+		[ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<APIResponse>> GetNumeroHotel(int id)
@@ -99,7 +102,8 @@ namespace MagicHotel_API.Controllers
 
         // Agregar un Hotel
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
+		[Authorize]
+		[ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<APIResponse>> CrearNumeroHotel([FromBody] NumeroHotelCreateDto createDto)
@@ -157,7 +161,8 @@ namespace MagicHotel_API.Controllers
 
         // Eliminar un Hotel
         [HttpDelete("{id:int}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+		[Authorize]
+		[ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteNumeroHotel(int id)
@@ -195,7 +200,8 @@ namespace MagicHotel_API.Controllers
 
         // Actualizar Registro Completo
         [HttpPut("{id:int}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+		[Authorize]
+		[ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> UpdateNumeroHotel(int id, [FromBody] NumeroHoteUpdatelDto updateDto)
         {
