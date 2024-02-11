@@ -4,10 +4,10 @@ namespace MagicHotel_Web.Services.IServices
 {
     public interface IHotelService
     {
-        Task<T> ObtenerTodos<T>();
-        Task<T> Obtener<T>(int id);
-        Task<T> Crear<T>(HotelCreateDto dto);
-        Task<T> Actualizar<T>(HotelUpdateDto dto);
-        Task<T> Remover<T>(int id);
+        Task<T> ObtenerTodos<T>(string token);
+        Task<T> Obtener<T>(int id, string token);
+        Task<T> Crear<T>(HotelCreateDto dto, string token);
+        Task<T> Actualizar<T>(HotelUpdateDto dto, string token);
+        Task<T> Remover<T>(int id, string token);
     }
 }

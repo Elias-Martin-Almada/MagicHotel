@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MagicHotel_Utilidad;
 using MagicHotel_Web.Models;
 using MagicHotel_Web.Models.Dto;
 using MagicHotel_Web.Services.IServices;
@@ -22,7 +23,7 @@ namespace MagicHotel_Web.Controllers
         {
             List<HotelDto> hotelList = new();
 
-            var response = await _hotelService.ObtenerTodos<APIResponse>();
+            var response = await _hotelService.ObtenerTodos<APIResponse>(HttpContext.Session.GetString(DS.SessionToken));
 
             if(response != null && response.IsExitoso)
             {
@@ -44,7 +45,7 @@ namespace MagicHotel_Web.Controllers
         {
             if(ModelState.IsValid)
             {
-                var response = await _hotelService.Crear<APIResponse>(modelo);
+                var response = await _hotelService.Crear<APIResponse>(modelo, HttpContext.Session.GetString(DS.SessionToken));
 
                 if(response != null && response.IsExitoso)
                 {
@@ -57,7 +58,7 @@ namespace MagicHotel_Web.Controllers
 
         public async Task<IActionResult> ActualizarHotel(int hotelId)
         {
-            var response = await _hotelService.Obtener<APIResponse>(hotelId);
+            var response = await _hotelService.Obtener<APIResponse>(hotelId, HttpContext.Session.GetString(DS.SessionToken));
 
             if(response != null && response.IsExitoso)
             {
@@ -73,7 +74,7 @@ namespace MagicHotel_Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var respose = await _hotelService.Actualizar<APIResponse>(modelo);
+                var respose = await _hotelService.Actualizar<APIResponse>(modelo, HttpContext.Session.GetString(DS.SessionToken));
 
                 if(respose != null && respose.IsExitoso)
                 {
@@ -87,7 +88,7 @@ namespace MagicHotel_Web.Controllers
 
         public async Task<IActionResult> RemoverHotel(int hotelId)
         {
-            var response = await _hotelService.Obtener<APIResponse>(hotelId);
+            var response = await _hotelService.Obtener<APIResponse>(hotelId, HttpContext.Session.GetString(DS.SessionToken));
 
             if (response != null && response.IsExitoso)
             {
@@ -101,7 +102,7 @@ namespace MagicHotel_Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RemoverHotel(HotelDto modelo)
         {
-            var respose = await _hotelService.Remover<APIResponse>(modelo.Id);
+            var respose = await _hotelService.Remover<APIResponse>(modelo.Id, HttpContext.Session.GetString(DS.SessionToken));
 
             if (respose != null && respose.IsExitoso)
             {
