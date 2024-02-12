@@ -24,7 +24,7 @@ namespace MagicHotel_Web.Services
             {
                 APITipo = APITipo.PUT,
                 Datos = dto,
-                Url = _hotelUrl + "/api/Hotel/" + dto.Id,
+                Url = _hotelUrl + "/api/v1/Hotel/" + dto.Id,
                 Token = token
             });
         }
@@ -35,7 +35,7 @@ namespace MagicHotel_Web.Services
             {
                 APITipo = APITipo.POST,
                 Datos = dto,
-                Url = _hotelUrl + "/api/Hotel",
+                Url = _hotelUrl + "/api/v1/Hotel",
                 Token = token
             });
         }
@@ -45,7 +45,7 @@ namespace MagicHotel_Web.Services
             return SendAsync<T>(new APIRequest()
             {
                 APITipo = APITipo.GET,
-                Url = _hotelUrl + "/api/Hotel/" + id,
+                Url = _hotelUrl + "/api/v1/Hotel/" + id,
                 Token = token
             });
         }
@@ -55,7 +55,7 @@ namespace MagicHotel_Web.Services
             return SendAsync<T>(new APIRequest()
             {
                 APITipo = APITipo.GET,
-                Url = _hotelUrl + "/api/Hotel",
+                Url = _hotelUrl + "/api/v1/Hotel",
                 Token = token
             });
         }
@@ -65,7 +65,7 @@ namespace MagicHotel_Web.Services
             return SendAsync<T>(new APIRequest()
             {
                 APITipo = APITipo.DELETE,
-                Url = _hotelUrl + "/api/Hotel/" + id,
+                Url = _hotelUrl + "/api/v1/Hotel/" + id,
                 Token = token
             });
         }

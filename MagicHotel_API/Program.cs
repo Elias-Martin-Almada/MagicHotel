@@ -3,6 +3,7 @@ using MagicHotel_API.Datos;
 using MagicHotel_API.Repositorio;
 using MagicHotel_API.Repositorio.IRepositorio;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -28,6 +29,19 @@ builder.Services.AddAutoMapper(typeof(MappingConfig));
 builder.Services.AddScoped<IHotelRepositorio, HotelRepositorio>();
 builder.Services.AddScoped<INumeroHotelRepositorio, NumeroHotelRepositorio>();
 builder.Services.AddScoped<IUsuarioRepositorio, UsuarioRepositorio>();
+
+builder.Services.AddApiVersioning(options =>
+{
+	options.AssumeDefaultVersionWhenUnspecified = true;
+	options.DefaultApiVersion = new ApiVersion(1, 0);
+	options.ReportApiVersions = true;
+});
+
+builder.Services.AddVersionedApiExplorer(options =>
+{
+	options.GroupNameFormat = "'v'VVV";
+	options.SubstituteApiVersionInUrl = true;
+});
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -60,6 +74,18 @@ builder.Services.AddSwaggerGen(options => {
 			new List<string>()
 		}
 	});
+	options.SwaggerDoc("v1", new OpenApiInfo
+	{
+		Version = "v1",
+		Title = "Magic Hotel v1",
+		Description = "API para Hoteles"
+	});
+    options.SwaggerDoc("v2", new OpenApiInfo
+    {
+        Version = "v2",
+        Title = "Magic Hotel v2",
+        Description = "API para Hoteles"
+    });
 });
 
 // Archivo Añadido
@@ -90,6 +116,11 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
+	app.UseSwaggerUI(options =>
+	{
+		options.SwaggerEndpoint("/swagger/v1/swagger.json", "Magic_HotelV1");
+		options.SwaggerEndpoint("/swagger/v2/swagger.json", "Magic_HotelV2");
+	});
     app.UseSwaggerUI();
 }
 

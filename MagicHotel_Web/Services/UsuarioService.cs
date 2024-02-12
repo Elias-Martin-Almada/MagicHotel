@@ -22,8 +22,8 @@ namespace MagicHotel_Web.Services
 			{
 				APITipo = DS.APITipo.POST,
 				Datos = dto,
-				Url = _hotelUrl + "/api/usuario/login"
-			});
+				Url = _hotelUrl + "/api/v1/usuario/login"
+            });
 		}
 
 		public Task<T> Registrar<T>(RegistroRequestDto dto)
@@ -32,8 +32,8 @@ namespace MagicHotel_Web.Services
 			{
 				APITipo = DS.APITipo.POST,
 				Datos = dto,
-				Url = _hotelUrl + "/api/usuario/registrar"
-			});
+				Url = _hotelUrl + "/api/v1/usuario/registrar"
+            });
 		}
 	}
 }

@@ -7,10 +7,11 @@ using System.Net;
 
 namespace MagicHotel_API.Controllers
 {
-	[Route("api/[controller]")]
-	[ApiController]
-	public class UsuarioController : ControllerBase
-	{
+    [Route("api/v{version:apiVersion}/[controller]")]
+    [ApiController]
+    [ApiVersionNeutral]
+    public class UsuarioController : ControllerBase
+    {
         private readonly IUsuarioRepositorio _usuarioRepo;
         private APIResponse _response;
         public UsuarioController(IUsuarioRepositorio usuarioRepo)
@@ -23,7 +24,7 @@ namespace MagicHotel_API.Controllers
         public async Task<IActionResult> Login([FromBody] LoginRequestDTO modelo)
         {
             var loginResponse = await _usuarioRepo.Login(modelo);
-            if(loginResponse.Usuario == null || string.IsNullOrEmpty(loginResponse.Token))
+            if (loginResponse.Usuario == null || string.IsNullOrEmpty(loginResponse.Token))
             {
                 _response.statusCode = HttpStatusCode.BadRequest;
                 _response.IsExitoso = false;
@@ -36,29 +37,29 @@ namespace MagicHotel_API.Controllers
             return Ok(_response);
         }
 
-		[HttpPost("registrar")] // Ruta= /api/usuario/login
-		public async Task<IActionResult> Registrar([FromBody] RegistroRequestDTO modelo)
-		{
+        [HttpPost("registrar")] // Ruta= /api/usuario/login
+        public async Task<IActionResult> Registrar([FromBody] RegistroRequestDTO modelo)
+        {
             bool isUsuarioUnico = _usuarioRepo.IsUsuarioUnico(modelo.UserName);
 
-            if(!isUsuarioUnico)
+            if (!isUsuarioUnico)
             {
-				_response.statusCode = HttpStatusCode.BadRequest;
-				_response.IsExitoso = false;
-				_response.ErrorMessages.Add("Usuario ya Existe!");
-				return BadRequest(_response);
-			}
+                _response.statusCode = HttpStatusCode.BadRequest;
+                _response.IsExitoso = false;
+                _response.ErrorMessages.Add("Usuario ya Existe!");
+                return BadRequest(_response);
+            }
             var usuario = await _usuarioRepo.Registrar(modelo);
-            if(usuario == null)
+            if (usuario == null)
             {
-				_response.statusCode = HttpStatusCode.BadRequest;
-				_response.IsExitoso = false;
-				_response.ErrorMessages.Add("Error al registrar Usuario!");
-				return BadRequest(_response);
-			}
+                _response.statusCode = HttpStatusCode.BadRequest;
+                _response.IsExitoso = false;
+                _response.ErrorMessages.Add("Error al registrar Usuario!");
+                return BadRequest(_response);
+            }
             _response.statusCode = HttpStatusCode.OK;
             _response.IsExitoso = true;
             return Ok(_response);
-		}
-	}
+        }
+    }
 }
