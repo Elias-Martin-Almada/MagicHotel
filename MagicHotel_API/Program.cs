@@ -1,8 +1,10 @@
 using MagicHotel_API;
 using MagicHotel_API.Datos;
+using MagicHotel_API.Modelos;
 using MagicHotel_API.Repositorio;
 using MagicHotel_API.Repositorio.IRepositorio;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -30,6 +32,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(option =>
 {
     option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
+builder.Services.AddIdentity<UsuarioAplicacion, IdentityRole>()
+				.AddEntityFrameworkStores<ApplicationDbContext>();
 
 // Agrego el servicio de AutoMapper para usarlo
 builder.Services.AddAutoMapper(typeof(MappingConfig));

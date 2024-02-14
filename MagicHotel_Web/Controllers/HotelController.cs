@@ -3,6 +3,7 @@ using MagicHotel_Utilidad;
 using MagicHotel_Web.Models;
 using MagicHotel_Web.Models.Dto;
 using MagicHotel_Web.Services.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -19,6 +20,7 @@ namespace MagicHotel_Web.Controllers
             _mapper = mapper;
         }
 
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> IndexHotel()
         {
             List<HotelDto> hotelList = new();
@@ -34,6 +36,7 @@ namespace MagicHotel_Web.Controllers
         }
 
         //Get 1) Llama a la Vista
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> CrearHotel()
         {
             return View();
@@ -56,6 +59,7 @@ namespace MagicHotel_Web.Controllers
             return View(modelo);
         }
 
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> ActualizarHotel(int hotelId)
         {
             var response = await _hotelService.Obtener<APIResponse>(hotelId, HttpContext.Session.GetString(DS.SessionToken));
@@ -85,7 +89,7 @@ namespace MagicHotel_Web.Controllers
             return View(modelo);
         }
 
-
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> RemoverHotel(int hotelId)
         {
             var response = await _hotelService.Obtener<APIResponse>(hotelId, HttpContext.Session.GetString(DS.SessionToken));

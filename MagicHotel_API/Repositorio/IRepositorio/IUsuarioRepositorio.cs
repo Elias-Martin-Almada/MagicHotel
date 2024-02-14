@@ -9,6 +9,6 @@ namespace MagicHotel_API.Repositorio.IRepositorio
 
 		Task<LoginResponseDTO> Login(LoginRequestDTO loginRequestDTO);
 
-		Task<Usuario> Registrar(RegistroRequestDTO registroRequestDTO);
+		Task<UsuarioDto> Registrar(RegistroRequestDTO registroRequestDTO);
 	}
 }

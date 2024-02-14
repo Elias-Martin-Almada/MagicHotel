@@ -4,6 +4,7 @@ using MagicHotel_Web.Models;
 using MagicHotel_Web.Models.Dto;
 using MagicHotel_Web.Models.ViewModel;
 using MagicHotel_Web.Services.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
@@ -22,6 +23,7 @@ namespace MagicHotel_Web.Controllers
             _mapper = mapper;
         }
 
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> IndexNumeroHotel()
         {
             List<NumeroHotelDto> numeroHotelList = new();
@@ -36,6 +38,7 @@ namespace MagicHotel_Web.Controllers
             return View(numeroHotelList);
         }
 
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> CrearNumeroHotel()
         {
             NumeroHotelViewModel numeroHotelVM = new();
@@ -88,7 +91,7 @@ namespace MagicHotel_Web.Controllers
             return View(modelo);
         }
 
-
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> ActualizarNumeroHotel(int hotelNo)
         {
             NumeroHotelUpdateViewModel numeroHotelVM = new();
@@ -150,7 +153,7 @@ namespace MagicHotel_Web.Controllers
             return View(modelo);
         }
 
-
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> RemoverNumeroHotel(int hotelNo)
         {
             NumeroHotelDeleteViewModel numeroHotelVM = new();

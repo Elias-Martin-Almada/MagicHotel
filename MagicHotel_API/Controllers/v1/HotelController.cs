@@ -35,7 +35,7 @@ namespace MagicHotel_API.Controllers.v1
         // Obtener Lista.
         [HttpGet]
         [ResponseCache(CacheProfileName = "Default30")]
-        [Authorize]
+        [Authorize(Roles ="admin", AuthenticationSchemes ="Bearer")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<APIResponse>> GetHoteles()
         {
@@ -82,7 +82,7 @@ namespace MagicHotel_API.Controllers.v1
 
         // Obtener solo un Hotel.
         [HttpGet("{id:int}", Name = "GetHotel")]
-        [Authorize]
+        [Authorize(Roles = "admin", AuthenticationSchemes = "Bearer")]
         // Documentar codigos de Estados:
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -124,7 +124,7 @@ namespace MagicHotel_API.Controllers.v1
 
         // Agregar un Hotel
         [HttpPost]
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "admin", AuthenticationSchemes = "Bearer")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -179,7 +179,7 @@ namespace MagicHotel_API.Controllers.v1
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "admin", AuthenticationSchemes = "Bearer")]
         public async Task<IActionResult> DeleteHotel(int id)
         {
             try
@@ -215,7 +215,7 @@ namespace MagicHotel_API.Controllers.v1
 
         // Actualizar Registro Completo
         [HttpPut("{id:int}")]
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "admin", AuthenticationSchemes = "Bearer")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> UpdateHotel(int id, [FromBody] HotelUpdateDto updateDto)
@@ -238,7 +238,7 @@ namespace MagicHotel_API.Controllers.v1
 
         // Actualizar solo UNA Propiedad del Registro
         [HttpPatch("{id:int}")]
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "admin", AuthenticationSchemes = "Bearer")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> UpdatePartialHotel(int id, JsonPatchDocument<HotelUpdateDto> patchDto)

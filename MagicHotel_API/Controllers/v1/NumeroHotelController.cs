@@ -36,7 +36,7 @@ namespace MagicHotel_API.Controllers.v1
 
         // Obtener Lista.
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "admin", AuthenticationSchemes = "Bearer")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<APIResponse>> GetNumeroHoteles()
         {
@@ -62,7 +62,7 @@ namespace MagicHotel_API.Controllers.v1
 
         // Obtener solo un Hotel.
         [HttpGet("{id:int}", Name = "GetNumeroHotel")]
-        [Authorize]
+        [Authorize(Roles = "admin", AuthenticationSchemes = "Bearer")]
         // Documentar codigos de Estados:
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -104,7 +104,7 @@ namespace MagicHotel_API.Controllers.v1
 
         // Agregar un Hotel
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "admin", AuthenticationSchemes = "Bearer")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -163,7 +163,7 @@ namespace MagicHotel_API.Controllers.v1
 
         // Eliminar un Hotel
         [HttpDelete("{id:int}")]
-        [Authorize]
+        [Authorize(Roles = "admin", AuthenticationSchemes = "Bearer")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -202,7 +202,7 @@ namespace MagicHotel_API.Controllers.v1
 
         // Actualizar Registro Completo
         [HttpPut("{id:int}")]
-        [Authorize]
+        [Authorize(Roles = "admin", AuthenticationSchemes = "Bearer")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> UpdateNumeroHotel(int id, [FromBody] NumeroHoteUpdatelDto updateDto)

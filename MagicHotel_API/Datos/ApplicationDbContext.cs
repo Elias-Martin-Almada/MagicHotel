@@ -1,21 +1,25 @@
 ﻿using MagicHotel_API.Modelos;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore; // Agrego para usar DbContext
 
 namespace MagicHotel_API.Datos
 {
     // Esta Clase se usa para crear los modelos en la DB como tablas 
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext<UsuarioAplicacion>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
             
         }
+
+        public DbSet<UsuarioAplicacion> UsuariosAplicacion {  get; set; }
 		public DbSet<Usuario> Usuarios { get; set; }
 		public DbSet<Hotel> Hoteles { get; set; }
         public DbSet<NumeroHotel> NumeroHoteles { get; set; }
         // Metodo para crear registros en la tabla Hoteles en DB
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Hotel>().HasData(
                 new Hotel()
                 {
