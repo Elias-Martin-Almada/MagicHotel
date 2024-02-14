@@ -60,6 +60,17 @@ namespace MagicHotel_Web.Services
             });
         }
 
+        public Task<T> ObtenerTodosPaginado<T>(string token, int pageNumber = 1, int pageSize = 4)
+        {
+            return SendAsync<T>(new APIRequest()
+            {
+                APITipo = APITipo.GET,
+                Url = _hotelUrl + "/api/v1/Hotel/HotelesPaginado", // "HotelesPaginado" llama a => [HttpGet("HotelesPaginado")] de HotelController API
+                Token = token,
+                Parametros = new Parametros() { PageNumber = pageNumber, PageSize = pageSize }
+            });
+        }
+
         public Task<T> Remover<T>(int id, string token)
         {
             return SendAsync<T>(new APIRequest()

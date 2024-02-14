@@ -2,6 +2,7 @@
 using MagicHotel_Utilidad;
 using MagicHotel_Web.Models;
 using MagicHotel_Web.Models.Dto;
+using MagicHotel_Web.Models.ViewModel;
 using MagicHotel_Web.Services.IServices;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -22,18 +23,30 @@ namespace MagicHotel_Web.Controllers
             _mapper = mapper;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int pageNumber = 1)
         {
             List<HotelDto> hotelList = new();
+            HotelPaginadoViewModel hotelVM = new HotelPaginadoViewModel();
 
-            var response = await _hotelService.ObtenerTodos<APIResponse>(HttpContext.Session.GetString(DS.SessionToken));
+            if(pageNumber < 1) pageNumber = 1;
+
+            var response = await _hotelService.ObtenerTodosPaginado<APIResponse>(HttpContext.Session.GetString(DS.SessionToken), pageNumber, 4);
 
             if(response != null && response.IsExitoso)
             {
                 hotelList = JsonConvert.DeserializeObject<List<HotelDto>>(Convert.ToString(response.Resultado));
+                hotelVM = new HotelPaginadoViewModel()
+                {
+                    HotelList = hotelList,
+                    PageNumber = pageNumber,
+                    TotalPaginas = JsonConvert.DeserializeObject<int>(Convert.ToString(response.TotalPaginas))
+                };
+
+                if (pageNumber > 1) hotelVM.Previo = "";
+                if (hotelVM.TotalPaginas <= pageNumber) hotelVM.Siguiente = "disabled";
             }
 
-            return View(hotelList);
+            return View(hotelVM);
         }
 
         public IActionResult Privacy()

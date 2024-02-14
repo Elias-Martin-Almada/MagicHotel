@@ -2,6 +2,7 @@
 using MagicHotel_API.Datos;
 using MagicHotel_API.Modelos;
 using MagicHotel_API.Modelos.Dto;
+using MagicHotel_API.Modelos.Especificaciones;
 using MagicHotel_API.Repositorio.IRepositorio;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -33,6 +34,7 @@ namespace MagicHotel_API.Controllers.v1
 
         // Obtener Lista.
         [HttpGet]
+        [ResponseCache(CacheProfileName = "Default30")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<APIResponse>> GetHoteles()
@@ -47,6 +49,28 @@ namespace MagicHotel_API.Controllers.v1
                 _response.statusCode = HttpStatusCode.OK;
 
                 return Ok(_response); // Cod de estado 200.
+            }
+            catch (Exception ex)
+            {
+                _response.IsExitoso = false;
+                _response.ErrorMessages = new List<string>() { ex.ToString() };
+            }
+            return _response;
+        }
+
+        [HttpGet("HotelesPaginado")] // Esto lo ocupo en HotelService ObtenerTodosPaginado<T> WEB
+        [ResponseCache(CacheProfileName = "Default30")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public ActionResult<APIResponse> GetHotelesPaginados([FromQuery] Parametros parametros)
+        {
+            try
+            {
+                var hotelList = _hotelRepo.ObtenerTodosPaginado(parametros);
+                _response.Resultado = _mapper.Map<IEnumerable<HotelDto>>(hotelList);
+                _response.statusCode = HttpStatusCode.OK;
+                _response.TotalPaginas = hotelList.MetaData.TotalPages;
+
+                return Ok(_response);
             }
             catch (Exception ex)
             {

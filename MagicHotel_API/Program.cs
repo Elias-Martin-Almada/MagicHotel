@@ -14,7 +14,16 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 // AGREGAR: .AddNewtonsoftJson(); para usar el PATCH
-builder.Services.AddControllers().AddNewtonsoftJson();
+builder.Services.AddControllers(options =>
+{
+	options.CacheProfiles.Add("Default30",
+		new CacheProfile()
+		{
+			Duration = 30
+		});
+}).AddNewtonsoftJson();
+
+
 
 // Conectar la cadena de conexion con DbContext
 builder.Services.AddDbContext<ApplicationDbContext>(option =>
@@ -87,6 +96,8 @@ builder.Services.AddSwaggerGen(options => {
         Description = "API para Hoteles"
     });
 });
+
+builder.Services.AddResponseCaching();
 
 // Archivo Añadido
 var key = builder.Configuration.GetValue<string>("ApiSettings:Secret");
